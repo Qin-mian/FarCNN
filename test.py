@@ -3,9 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, f1_score
 from dataloader import get_data_loaders
-from model import CNNModel  # 确保这是你的模型类名
+from model import CNNModel
 
-Feature = 'boundary'  # 根据你的实际特征名称进行替换
+
+Feature = 'calcification'  # 根据你的实际特征名称进行替换
 feature_dir = f'./{Feature}'
 batch_size = 64
 image_size = (150,150)
@@ -37,7 +38,19 @@ with torch.no_grad():
 # 计算混淆矩阵
 confusion_mtx = confusion_matrix(test_labels, test_predictions)
 # 假设你有一个二分类问题，类别标签为0和1
-class_indices_train_list = ['0', '1']  # 根据你的实际类别进行替换
+class_indices_train_list = ['negative', 'positive']  # 根据你的实际类别进行替换
+
+# 计算精度
+accuracy = accuracy_score(test_labels, test_predictions)
+print(f"Accuracy: {accuracy:.4f}")
+
+# 计算召回率
+recall = recall_score(test_labels, test_predictions, average='macro')
+print(f"Recall: {recall:.4f}")
+
+# 计算F1得分
+f1 = f1_score(test_labels, test_predictions, average='macro')
+print(f"F1 Score: {f1:.4f}")
 
 # 绘制混淆矩阵
 fig, ax = plt.subplots(figsize=(8, 8))
@@ -59,14 +72,3 @@ for i in range(N_TYPES):
 
 plt.savefig(f'./{Feature}_confusion_matrix.png')
 plt.show()
-# 计算精度
-accuracy = accuracy_score(test_labels, test_predictions)
-print(f"Accuracy: {accuracy:.4f}")
-
-# 计算召回率
-recall = recall_score(test_labels, test_predictions, average='macro')
-print(f"Recall: {recall:.4f}")
-
-# 计算F1得分
-f1 = f1_score(test_labels, test_predictions, average='macro')
-print(f"F1 Score: {f1:.4f}")

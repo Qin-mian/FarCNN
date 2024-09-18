@@ -11,7 +11,7 @@ from sklearn.metrics import f1_score
 SAVE = False
 SEED = 111
 epochs = 50
-Feature = 'calcification'
+Feature = 'shape'
 batch_size = 128
 image_size = (150, 150)
 image_shape = (1, image_size[0], image_size[1])
