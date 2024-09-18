@@ -34,13 +34,3 @@ def get_data_loaders(data_dir, batch_size, image_size, shuffle=True, random_stat
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
     return train_loader, test_loader
-
-if __name__ == "__main__":
-    train_dir = 'path_to_train_data'
-    batch_size = 32
-    image_size = (150, 150)
-
-    train_loader, test_loader = get_data_loaders(train_dir, batch_size, image_size)
-
-    print(f'Training data loader created with batch size: {batch_size}')
-    print(f'Testing data loader created with batch size: {batch_size}')

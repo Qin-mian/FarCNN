@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 from torch.optim import Adam, Adagrad
-
 from dataloader import get_data_loaders
 from model import *
 import torch
@@ -11,9 +10,9 @@ from sklearn.metrics import f1_score
 SAVE = False
 SEED = 111
 epochs = 50
-Feature = 'shape'
-batch_size = 128
-image_size = (150, 150)
+Feature = 'boundary' # change this to fit different tasks
+batch_size = 32
+image_size = (300, 300)
 image_shape = (1, image_size[0], image_size[1])
 
 with open(f'{Feature}.txt', 'r') as f:
@@ -45,6 +44,8 @@ model = CNNModel(image_shape).to(device)
 
 # 优化器目前Adagrad最好
 optimizer = Adagrad(model.parameters(), lr=0.001, lr_decay=0)
+# optimizer = Adam(model.parameters(), lr=0.001)
+
 
 # 损失
 criterion = nn.CrossEntropyLoss()
@@ -150,6 +151,7 @@ for epoch in range(epochs):
         optimizer.zero_grad()
         outputs = model(inputs)
         loss = criterion(outputs, labels)
+        loss = loss
         loss.backward()
         optimizer.step()
     val_loss =  calculate_loss(model, test_loader, criterion)

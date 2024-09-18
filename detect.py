@@ -5,7 +5,7 @@ import torch
 import numpy as np
 from model import CNNModel
 
-Feature = 'calcification'
+Feature = 'shape'
 
 image_shape = (1, 150, 150)
 # 创建模型实例
