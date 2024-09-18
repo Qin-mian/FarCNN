@@ -15,14 +15,16 @@ def get_data_loaders(data_dir, batch_size, image_size, shuffle=True, random_stat
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
         transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1),
+        transforms.Grayscale(num_output_channels=1),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        transforms.Normalize(mean=[0.456], std=[0.224]),
     ])
 
     test_transform = transforms.Compose([
         transforms.Resize(image_size),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        transforms.Grayscale(num_output_channels=1),
+        transforms.Normalize(mean=[0.456], std=[0.224]),
     ])
 
     train_dataset = CustomDataset(os.path.join(data_dir, 'train'), transform=train_transform)

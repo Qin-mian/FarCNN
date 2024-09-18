@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from torch.optim import Adam
+from torch.optim import Adam, Adagrad
 
 from dataloader import get_data_loaders
 from model import *
@@ -11,11 +11,14 @@ from sklearn.metrics import f1_score
 SAVE = False
 SEED = 111
 epochs = 50
-Feature = 'boundary'
-batch_size = 64
+Feature = 'calcification'
+batch_size = 128
 image_size = (150, 150)
-image_shape = (3, image_size[0], image_size[1])
-best_f1 = 0.78
+image_shape = (1, image_size[0], image_size[1])
+
+with open(f'{Feature}.txt', 'r') as f:
+    best_f1 = float(f.readline())
+print(f'Before Best F1 score: {best_f1}')
 
 # 随机种子
 torch.manual_seed(SEED)
@@ -40,8 +43,8 @@ print(f'Using {device} device.')
 model = CNNModel(image_shape).to(device)
 
 
-# 优化器可选
-optimizer = Adam(model.parameters(), lr=0.0005, betas=(0.869, 0.995))
+# 优化器目前Adagrad最好
+optimizer = Adagrad(model.parameters(), lr=0.001, lr_decay=0)
 
 # 损失
 criterion = nn.CrossEntropyLoss()
@@ -49,7 +52,7 @@ criterion = nn.CrossEntropyLoss()
 
 # 早停
 class EarlyStopping:
-    def __init__(self, patience=8, verbose=False):
+    def __init__(self, patience=10, verbose=False):
         self.patience = patience
         self.verbose = verbose
         self.best_loss = None
@@ -69,6 +72,7 @@ class EarlyStopping:
             self.best_loss = val_loss
             self.counter = 0
 
+# 学习率衰减
 class ReduceLROnPlateau:
     def __init__(self, factor=0.3, patience=5, verbose=False):
         self.factor = factor
@@ -132,7 +136,7 @@ def calculate_accuracy(model, dataloader):
     return correct / total
 
 
-patience = 8
+patience = 15
 factor = 0.3
 early_stopping = EarlyStopping(patience=patience, verbose=True)
 reduce_lr = ReduceLROnPlateau(factor=factor, patience=patience, verbose=True)
@@ -160,6 +164,8 @@ for epoch in range(epochs):
         best_f1 = f1
         torch.save(model.state_dict(), f'./models/{Feature}.pth')
         print("save the best model")
+        with open(f'{Feature}.txt', 'w') as f:
+            f.write(f'{best_f1}')
     early_stopping(val_loss)
     reduce_lr(val_loss, optimizer)
     if early_stopping.early_stop:

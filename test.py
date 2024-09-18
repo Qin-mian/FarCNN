@@ -9,14 +9,14 @@ Feature = 'boundary'  # 根据你的实际特征名称进行替换
 feature_dir = f'./{Feature}'
 batch_size = 64
 image_size = (150,150)
-image_shape = (3, image_size[0], image_size[1])
+image_shape = (1, image_size[0], image_size[1])
 N_TYPES = 2
 _, test_loader = get_data_loaders(feature_dir, batch_size, image_size)
 
 # 创建模型实例
 model = CNNModel(image_shape)
 # 加载模型权重
-model.load_state_dict(torch.load(f'./models/{Feature}_resnet.pth'))
+model.load_state_dict(torch.load(f'./models/{Feature}.pth'))
 # 将模型移动到正确的设备
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = model.to(device)
