@@ -11,8 +11,8 @@ SAVE = False
 SEED = 111
 epochs = 50
 Feature = 'boundary' # change this to fit different tasks
-batch_size = 32
-image_size = (300, 300)
+batch_size = 64
+image_size = (150, 150)
 image_shape = (1, image_size[0], image_size[1])
 
 with open(f'{Feature}.txt', 'r') as f:

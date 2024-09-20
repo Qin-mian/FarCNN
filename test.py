@@ -9,7 +9,7 @@ from model import CNNModel
 Feature = 'direction'  # 根据你的实际特征名称进行替换
 feature_dir = f'./{Feature}'
 batch_size = 64
-image_size = (200,150)
+image_size = (150,150)
 image_shape = (1, image_size[0], image_size[1])
 N_TYPES = 2
 _, test_loader = get_data_loaders(feature_dir, batch_size, image_size)
